@@ -238,6 +238,7 @@ document.getElementById("date").style.animation = "none"
 document.getElementById("workLogForm").addEventListener("submit", function (e) {
   e.preventDefault()
 
+  localStorage.setItem("name", document.getElementById("name").value)
   const data = {
     name: document.getElementById("name").value,
     date: document.getElementById("date").value,
