@@ -1,0 +1,389 @@
+<h2>Project Work Log Submission</h2>
+
+  <form id="workLogForm">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" required>
+      </div>
+
+      <div class="form-group">
+        <label for="hours">Hours</label>
+        <input type="number" id="hours" min="0" step="0.1" placeholder="0" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <select id="location" required>
+          <option value="">--Select--</option>
+          <option value="Lab">In Lab</option>
+          <option value="Out of Lab">Out of Lab</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" required>
+      </div>
+    </div>
+
+    <div class="form-group" style="flex: 1;">
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" required></textarea>
+    </div>
+
+    <button id="submitbutton" type="submit">Submit</button>
+  </form>
+
+  <div id="logContainer">
+    <h3>Submitted Logs</h3>
+
+  </div>
+
+
+
+
+  <script>
+
+
+const form = document.getElementById("workLogForm")
+const logContainer = document.getElementById("logContainer")
+const link = "https://script.google.com/macros/s/AKfycby7TUtT0mcJRmT3s8R3H4oR33B8CeG1zHBuLAYkEtJGg5q47lS9XLPC5GwSy5hIRP1nEA/exec"
+document.getElementById("location").style.animation = "borderFade 1s infinite alternate"
+document.getElementById("date").style.animation = "borderFade 1s infinite alternate"
+document.getElementById("name").style.animation = "borderFade 1s infinite alternate"
+
+
+
+
+function loadLogs() {
+  fetch(
+    link,
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      const logContainer = document.getElementById("logContainer")
+data.forEach((log) => {
+
+            if(log.name == undefined && log.time == undefined){}else{
+            const logCard = document.createElement('div');
+      logCard.classList.add('log-card');
+
+      const formattedDate = new Date(log.date).toLocaleDateString(undefined, {
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+      });
+
+      logCard.innerHTML = `
+        <div class="header-row">
+          <div class="date">${formattedDate}</div>
+          <div class="hours">${log.hours} hrs</div>
+        </div>
+        <div class="location">${log.location}</div>
+        <div class="description">${log.description}</div>
+        <div class="name">Submitted by: ${log.name}</div>
+      `;
+
+      logContainer.appendChild(logCard);
+      form.reset();
+            }
+})
+
+
+document.querySelectorAll(".location").forEach(function(ele) {
+  if (ele.innerHTML === "Lab") {
+    ele.style.background = "#A6CBFF";
+  } else {
+    ele.style.background = "#FFED9E";
+  }
+});
+
+
+
+var rememberedname = localStorage.getItem("name")
+if(rememberedname == undefined || rememberedname == null || rememberedname == ""){
+document.getElementById("name").style.animation = "none"
+  document.getElementById("name").style.borderColor = "gray"
+  document.getElementById("name").style.borderWidth = "1px"
+}else{
+  document.getElementById("name").style.borderColor = "lime"
+  document.getElementById("name").style.borderWidth = "3px"
+  document.getElementById("name").value = rememberedname;
+  document.getElementById("name").style.animation = "none"
+}
+
+
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("date").value = today;
+        document.getElementById("date").style.borderColor = "lime"
+        document.getElementById("date").style.borderWidth = "3px"
+document.getElementById("date").style.animation = "none"
+
+
+
+    // Building coordinates (example: Eiffel Tower)
+    const buildingLat = 38.943204;
+    const buildingLng = -92.333915;
+
+    // Radius threshold in meters
+    const NEAR_THRESHOLD = 50;
+
+    // Function to calculate distance between two lat/lng points in meters
+    function getDistanceFromLatLon(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // Earth's radius in meters
+      const toRad = angle => angle * (Math.PI / 180);
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // distance in meters
+    }
+
+    // Get user location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+
+        const distance = getDistanceFromLatLon(userLat, userLng, buildingLat, buildingLng);
+        document.getElementById("location").style.borderColor = "lime"
+        document.getElementById("location").style.borderWidth = "3px"
+        if (distance <= NEAR_THRESHOLD) {
+          document.getElementById("location").value = "In Lab"
+        } else {
+          document.getElementById("location").value = "Out of Lab"
+        }
+        document.getElementById("location").style.animation = "none"
+      }, error => {
+                document.getElementById("location").style.borderColor = "gray"
+                document.getElementById("location").style.animation = "none"
+        document.getElementById("location").style.borderWidth = "1px"
+      });
+    } else {
+              document.getElementById("location").style.borderColor = "gray"
+                              document.getElementById("location").style.animation = "none"
+        document.getElementById("location").style.borderWidth = "1px"
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+      .catch(err => {
+    console.error("Fetch POST error:", err.message);
+    alert("There was a problem submitting your log. Check console for details.");
+  });
+}
+
+
+
+
+
+document.getElementById("workLogForm").addEventListener("submit", function (e) {
+  e.preventDefault()
+
+  const data = {
+    name: document.getElementById("name").value,
+    date: document.getElementById("date").value,
+    hours: document.getElementById("hours").value,
+    location: document.getElementById("location").value,
+    description: document.getElementById("description").value,
+  }
+  console.log(data)
+  if(data.description.includes("|") || data.description.includes("[]")){
+    alert("Please do not include '|' or '[]' in the description.")
+  }else{
+    
+    document.getElementById("submitbutton").innerHTML = '<img src="https://cdn.pixabay.com/animation/2023/11/09/03/05/03-05-45-320_512.gif" style="width:15px;">'
+  fetch(
+  link,
+  {
+    
+    method: "POST",
+    body: JSON.stringify(data),
+  }
+)
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
+    }
+    return res.text();
+  })
+  .then(msg => {
+    console.log("Server response:", msg);
+    
+    document.getElementById("workLogForm").reset();
+    location.reload();
+  })
+  .catch(err => {
+    console.error("Fetch POST error:", err.message);
+    alert("There was a problem submitting your log. Check console for details.");
+  });
+  }
+})
+
+loadLogs()
+
+
+
+  </script>
+
+
+
+  <style>
+body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 40px;
+      color: #333;
+    }
+
+    h2, h3 {
+      color: #2c3e50;
+    }
+
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 900px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    input, select, textarea {
+      padding: 10px;
+      border: 1px solid gray;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background: #2c3e50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      align-self: flex-start;
+    }
+
+    button:hover {
+      background: #1a242f;
+    }
+
+    #logContainer {
+      max-width: 900px;
+    }
+
+    /* Log Card Styling */
+    .log-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .log-card .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    .log-card .header-row .date {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .log-card .hours {
+      background: #ecf0f1;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+
+    .log-card .location {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .log-card .description {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .log-card .name {
+      text-align: right;
+      font-size: 13px;
+      color: #999;
+      font-style: italic;
+    }
+
+
+  #location, #date, #name{
+  border: 3px solid rgba(0, 0, 255, 1);
+  }
+
+
+
+@keyframes borderFade {
+  from {
+    border-color: rgba(0, 0, 255, 1);   /* fully opaque */
+  }
+  to {
+    border-color: rgba(0, 0, 255, 0);   /* fully transparent */
+  }
+}
+
+  </style>
