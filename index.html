@@ -48,7 +48,7 @@
 
 const form = document.getElementById("workLogForm")
 const logContainer = document.getElementById("logContainer")
-const link = "https://script.google.com/a/macros/umsystem.edu/s/AKfycbxe4M_-_wcAtMwBl_8_7RmSribhGQUghbdT9a0lbCVLMj1LAOyBwJ_DK8Bt-GN5i61mkw/exec"
+const link = "https://script.google.com/a/macros/umsystem.edu/s/AKfycbyJgFr4h5tEfBbcEsZc4eOwRE0zW_TNqXw3myJ8lHwd8HSEcqzOaLk8W89-DafqLicMzQ/exec"
 document.getElementById("location").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("date").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("name").style.animation = "borderFade 1s infinite alternate"
@@ -59,6 +59,11 @@ document.getElementById("name").style.animation = "borderFade 1s infinite altern
 function loadLogs() {
   fetch(
     link,
+  {
+    
+    method: "GET",
+    credentials: 'include',
+  }
   )
     .then((res) => res.json())
     .then((data) => {
@@ -182,7 +187,7 @@ document.getElementById("date").style.animation = "none"
     })
       .catch(err => {
     console.error("Fetch POST error:", err.message);
-    alert("There was a problem submitting your log. Check console for details.");
+    alert("Could Not Connect");
   });
 }
 
@@ -211,6 +216,7 @@ document.getElementById("workLogForm").addEventListener("submit", function (e) {
   {
     
     method: "POST",
+    credentials: 'include',
     body: JSON.stringify(data),
   }
 )
