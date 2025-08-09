@@ -1,4 +1,10 @@
+<button id="otp">Reset OTP</button>
+
+
+
+
 <h2>Project Work Log Submission</h2>
+
 
   <form id="workLogForm">
     <div class="form-row">
@@ -41,14 +47,46 @@
   </div>
 
 
+<div id="passit" style="position:absolute;top:0%;left:0%;width:100%;height:100%;background:rgba(0,0,0,.4)">
+<div style="margin-top:30%;margin:10%;">
+  <form>
+        <div class="form-row">
+      <div class="form-group">
+        <label for="pass">One-Time Password</label>
+        <input type="text" id="pass">
+        <button onclick="subit">submit</button>
+      </div>
+      </div>
+  </form>
+</div>
+</div>
+
 
 
   <script>
+document.getElementById("passit").style.visibility = "hidden"
+function subit(){
+localStorage.setItem("pass", document.getElementById("pass").value)
+location.reload()
+}
+
+
+
+var pass = localStorage.getItem("pass")
+
+
+if(pass == null || pass == undefined || pass == ""){
+document.getElementById("passit").style.visibility = "visible"
+  return
+}
+
+
+
 
 
 const form = document.getElementById("workLogForm")
 const logContainer = document.getElementById("logContainer")
-const link = "https://script.google.com/a/macros/umsystem.edu/s/AKfycbyJgFr4h5tEfBbcEsZc4eOwRE0zW_TNqXw3myJ8lHwd8HSEcqzOaLk8W89-DafqLicMzQ/exec"
+const link = "https://script.google.com/macros/s/AKfycbzISodk9BbQHJFBdBt5XIScJAXFYBZlOkRA3Fk0FYdATRQB2WZbAHuXwekfdJDfwfwRVA/exec" + pass;
 document.getElementById("location").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("date").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("name").style.animation = "borderFade 1s infinite alternate"
@@ -59,12 +97,6 @@ document.getElementById("name").style.animation = "borderFade 1s infinite altern
 function loadLogs() {
   fetch(
     link,
-  {
-    
-    method: "GET",
-    redirect: "follow",
-    credentials: 'include',
-  }
   )
     .then((res) => res.json())
     .then((data) => {
@@ -217,8 +249,6 @@ document.getElementById("workLogForm").addEventListener("submit", function (e) {
   {
     
     method: "POST",
-    credentials: 'include',
-    redirect: "follow",
     body: JSON.stringify(data),
   }
 )
@@ -393,5 +423,9 @@ body {
     border-color: rgba(0, 0, 255, 0);   /* fully transparent */
   }
 }
+#otp{
+  background: rgba(0,0,0,.1) !important
+}
+
 
   </style>
