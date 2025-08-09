@@ -1,4 +1,4 @@
-<button id="otp">Reset OTP</button>
+<button id="otp" onclick="resetotp">Reset OTP</button>
 
 
 
@@ -71,6 +71,13 @@ location.reload()
 }
 
 
+function resetotp(){
+
+localStorage.removeItem("pass")
+
+location.reload()
+}
+
 
 var pass = localStorage.getItem("pass")
 
@@ -86,7 +93,7 @@ document.getElementById("passit").style.visibility = "visible"
 
 const form = document.getElementById("workLogForm")
 const logContainer = document.getElementById("logContainer")
-const link = "https://script.google.com/macros/s/AKfycbzISodk9BbQHJFBdBt5XIScJAXFYBZlOkRA3Fk0FYdATRQB2WZbAHuXwekfdJDfwfwRVA/exec" + pass;
+const link = "https://script.google.com/macros/s/AKfycbzISodk9BbQHJFBdBt5XIScJAXFYBZlOkRA3Fk0FYdATRQB2WZbAHuXwekfdJDfwfwRVA/exec?a=" + pass;
 document.getElementById("location").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("date").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("name").style.animation = "borderFade 1s infinite alternate"
