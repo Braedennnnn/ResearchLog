@@ -93,7 +93,7 @@ document.getElementById("passit").style.visibility = "visible"
 
 const form = document.getElementById("workLogForm")
 const logContainer = document.getElementById("logContainer")
-const link = "https://script.google.com/macros/s/AKfycbxd5RZVrUUtHLqOynYi74O-nFEIDEU7s6Yk_bRS-J11Bb6PlN6G4IMUD9HVUsV37Iol5w/exec?a=" + pass;
+const link = "https://script.google.com/macros/s/AKfycby7HvYNw_YxMNjbEgGvM17L8s3IjbontPetAE9XFqY_4lI9oENuJ5-iWtbIoKFapNQS1A/exec?a=" + pass;
 document.getElementById("location").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("date").style.animation = "borderFade 1s infinite alternate"
 document.getElementById("name").style.animation = "borderFade 1s infinite alternate"
@@ -113,10 +113,15 @@ data.forEach((log) => {
             if(log.name == undefined && log.time == undefined){}else{
             const logCard = document.createElement('div');
       logCard.classList.add('log-card');
+function parseDateAsLocal(dateStr) {
+  const parts = dateStr.split('-'); // ["2025", "08", "08"]
+  return new Date(parts[0], parts[1] - 1, parts[2]); // year, monthIndex, day
+}
 
-      const formattedDate = new Date(log.date).toLocaleDateString(undefined, {
-        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-      });
+const localDate = parseDateAsLocal(log.date);
+const formattedDate = localDate.toLocaleDateString(undefined, {
+  weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+});
 
       logCard.innerHTML = `
         <div class="header-row">
