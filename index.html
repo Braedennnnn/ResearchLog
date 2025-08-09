@@ -84,10 +84,8 @@ var pass = localStorage.getItem("pass")
 
 if(pass == null || pass == undefined || pass == ""){
 document.getElementById("passit").style.visibility = "visible"
-  setTimeout(function(){
-    
-  },100000)
-}
+
+}else{
 
 
 
@@ -282,7 +280,7 @@ document.getElementById("workLogForm").addEventListener("submit", function (e) {
 
 loadLogs()
 
-
+}
 
   </script>
 
